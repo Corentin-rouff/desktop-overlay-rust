@@ -1,83 +1,83 @@
-# 🖥️ Desktop Overlay for Windows
+<div align="center">
 
-A lightweight, modular and click-through **Windows desktop overlay built with Rust and egui/eframe**.
+# 🧩 Desktop Overlay Rust
 
-The goal of this project is to provide a modern alternative to traditional desktop widget systems: fast, native, customizable and extensible.
+### A modular, transparent and click-through Windows desktop overlay built with Rust + egui
 
-> 🚧 **Early development**
->
-> The project is currently under active development.
-> The widget system and Windows overlay engine are functional, but many features are still being built.
+**System monitoring · Service outage monitoring · GPU/CPU/RAM/Disk widgets · System tray · Professional settings UI · Extensible architecture**
+
+![Rust](https://img.shields.io/badge/Rust-2024-orange?logo=rust&logoColor=white)
+![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?logo=windows11&logoColor=white)
+![egui](https://img.shields.io/badge/egui%20%2F%20eframe-0.36.2-8A2BE2)
+![Status](https://img.shields.io/badge/status-active%20development-yellow)
+
+</div>
 
 ---
 
 ## ✨ Overview
 
-Desktop Overlay runs as a transparent layer above the Windows desktop.
+**Desktop Overlay Rust** is a lightweight Windows desktop overlay designed to display useful widgets while staying out of the way.
 
-It can display multiple independent widgets while allowing mouse clicks to pass through the overlay when it is locked.
+The overlay is:
 
-Press **F8** at any time to switch between:
+- transparent;
+- borderless;
+- always on top;
+- click-through when locked;
+- configurable through a dedicated Windows settings window;
+- controlled through a system tray icon.
 
-**🔒 Locked mode**
-
-- Transparent overlay
-- Click-through enabled
-- Widgets stay visible
-- Your desktop remains fully usable
-
-**🛠️ Edit mode**
-
-- Click-through disabled
-- Widget configuration available
-- Widgets can be moved and configured
-- Overlay settings become accessible
-
-Press **F8** again to return to locked mode.
+The goal is to create a modern, native and extensible alternative to desktop widget tools such as Rainmeter, but built entirely in Rust.
 
 ---
 
-# 🚀 Features
+## 🚀 Features
 
-## 🪟 Native Windows overlay
+### 🪟 Overlay engine
 
-- Transparent desktop overlay
-- Always-on-top window
-- Borderless window
+- Transparent Windows overlay
+- Borderless fullscreen window
+- Always on top
 - Hidden from the taskbar
-- Click-through support
-- Global F8 edit shortcut
-- Low-overhead Rust application
+- Click-through locked mode
+- Editable widget layout
+- Persistent widget positions
 - WGPU accelerated rendering
-
-## 🧩 Modular widget architecture
-
-Widgets are designed as independent modules.
-
-The long-term goal is to make it possible to enable, disable and configure widgets without modifying the overlay engine.
-
-Planned widget categories include:
-
-- Service monitoring
-- System monitoring
-- Network monitoring
-- Weather
-- Clock and calendar
-- Media controls
-- Server monitoring
-- Development tools
-- Custom HTTP/API widgets
-- Notes and shortcuts
+- Win32 integration for stable click-through behavior
 
 ---
 
-# 🚨 Service Monitor
+### 🧩 Modular widget system
 
-The first widget included in the project is **Service Monitor**.
+Each widget can be independently:
 
-It monitors online services and displays their current state directly on your desktop.
+- enabled;
+- disabled;
+- moved;
+- configured;
+- reset to its default position.
 
-Possible states include:
+The widget configuration is stored in:
+
+```text
+overlay-config.json
+```
+
+---
+
+## 🖥️ Current widgets
+
+### 🚨 Service Monitor
+
+Monitors external services and APIs.
+
+Supported providers:
+
+- Generic HTTP health checks
+- Downdetector Enterprise API
+
+Possible states:
 
 ```text
 🟢 Operational
@@ -87,526 +87,570 @@ Possible states include:
 
 The widget can display:
 
-- Service name
-- Current status
-- Last check
-- Monitoring errors
-- Recent outage state
-- Multiple monitored services
+- service name;
+- current status;
+- status details;
+- last check time;
+- degradation/outage alerts.
 
-The monitoring system runs separately from the UI so network requests do not freeze the overlay.
-
----
-
-# 📡 Downdetector support
-
-The project contains a provider designed for the official **Downdetector API**.
-
-Supported status values include:
-
-```text
-success
-warning
-danger
-```
-
-The Downdetector API requires access to Downdetector Enterprise.
-
-The architecture does not depend exclusively on Downdetector. Other providers can be added without rewriting the widget.
-
-For example:
-
-```text
-ServiceStatusWidget
-        │
-        ▼
-ServiceStatusProvider
-        │
-        ├── Downdetector
-        ├── Generic HTTP
-        ├── Official status pages
-        ├── Custom API
-        └── Future providers
-```
+Each monitored service can also be enabled or disabled independently.
 
 ---
 
-# 🌐 Generic HTTP monitoring
+### 🕒 Clock
 
-A generic HTTP provider is also included.
+Displays local Windows time.
 
-This makes it possible to monitor services without requiring Downdetector.
+Available options:
 
-Example use cases:
-
-```text
-Discord API
-Personal websites
-VPS servers
-REST APIs
-Game servers
-Self-hosted applications
-Home servers
-Monitoring endpoints
-```
-
-More monitoring methods will be added later.
+- show/hide seconds;
+- show/hide date.
 
 ---
 
-# 🎮 Controls
+### 📊 System Monitor
 
-| Key  | Action                    |
-| ---- | ------------------------- |
-| `F8` | Toggle Edit / Locked mode |
+Displays live computer statistics.
 
-### Locked mode
+Current metrics:
 
-```text
-Overlay visible
-       │
-       ├── Widgets visible
-       ├── Transparent background
-       └── Mouse clicks pass through
-```
+- CPU usage
+- GPU usage
+- RAM usage
+- Disk usage
+- Disk read/write activity
+- System uptime
+- Hostname
 
-### Edit mode
-
-```text
-Press F8
-   │
-   ▼
-Click-through disabled
-   │
-   ├── Settings available
-   ├── Widgets editable
-   └── Widgets movable
-```
-
----
-
-# 🛠️ Requirements
-
-Currently supported:
-
-```text
-Windows 10
-Windows 11
-```
-
-Development requirements:
-
-```text
-Rust
-Cargo
-Windows
-```
-
-The application currently targets Windows because the overlay engine uses native Windows window behavior.
-
-Cross-platform support may be investigated later.
-
----
-
-# 📦 Installation
-
-Clone the repository:
-
-```bash
-git clone YOUR_REPOSITORY
-cd desktop-overlay-rust
-```
-
-Run the development build:
-
-```bash
-cargo run
-```
-
-Or:
-
-```bash
-cargo run --release
-```
-
----
-
-# ⚡ Release build
-
-Create an optimized executable with:
-
-```bash
-cargo build --release
-```
-
-The executable will then be generated inside:
-
-```text
-target/release/
-```
-
----
-
-# 🗂️ Project structure
-
-```text
-desktop-overlay-rust/
-│
-├── Cargo.toml
-├── Cargo.lock
-├── README.md
-│
-└── src/
-    ├── main.rs
-    ├── app.rs
-    │
-    ├── core/
-    │   ├── mod.rs
-    │   ├── monitor.rs
-    │   └── windows_overlay.rs
-    │
-    ├── providers/
-    │   ├── mod.rs
-    │   ├── status_provider.rs
-    │   └── downdetector.rs
-    │
-    └── widgets/
-        ├── mod.rs
-        └── service_status.rs
-```
-
-The architecture intentionally separates:
-
-```text
-Window / Overlay engine
-        │
-Widget manager
-        │
-Widgets
-        │
-Providers / APIs
-```
-
-This keeps the project maintainable as more widgets are introduced.
-
----
-
-# 🧠 Architecture
-
-The application is built around several independent layers.
-
-## Overlay engine
-
-Responsible for:
-
-- Transparent Windows window
-- Click-through
-- Always-on-top behavior
-- Edit mode
-- Rendering
-
-## Widget layer
-
-Responsible for:
-
-- Widget rendering
-- Widget position
-- Widget state
-- Widget configuration
-
-## Monitoring layer
-
-Responsible for:
-
-- Background service checks
-- Network requests
-- Status updates
-- Communication with the UI
-
-## Provider layer
-
-Responsible for communicating with external monitoring sources.
+Each metric can be individually enabled or disabled.
 
 Example:
 
 ```text
-              ┌─────────────────┐
-              │ Desktop Overlay │
-              └────────┬────────┘
-                       │
-                ┌──────▼──────┐
-                │   Widgets   │
-                └──────┬──────┘
-                       │
-                ┌──────▼──────┐
-                │   Monitor   │
-                └──────┬──────┘
-                       │
-            ┌──────────▼──────────┐
-            │ Status Providers    │
-            └──────┬──────┬──────┘
-                   │      │
-           Downdetector  HTTP
+┌──────────────────────────────────────┐
+│ SYSTÈME                              │
+│ MY-PC                                │
+│                                      │
+│ CPU                           12 %    │
+│ ███░░░░░░░░░░░░░░░░░░░░░░░░░      │
+│                                      │
+│ GPU                           34 %    │
+│ ████████░░░░░░░░░░░░░░░░░░░░      │
+│ NVIDIA GeForce ...                   │
+│                                      │
+│ RAM                    11 / 32 GiB   │
+│ █████████░░░░░░░░░░░░░░░░░░░      │
+│                                      │
+│ Disk activity                21 %    │
+│ Read  18 MiB/s                       │
+│ Write  4 MiB/s                       │
+│                                      │
+│ C:                     423 / 931 GiB │
+│ ███████████░░░░░░░░░░░░░░░░       │
+│                                      │
+│ Uptime: 4 h 27 min                   │
+└──────────────────────────────────────┘
 ```
 
 ---
 
-# 🔐 Security
+## 🖱️ System Tray Control
 
-Do **not** commit API keys or private access tokens to GitHub.
+The application is controlled through an icon in the Windows notification area.
 
-Local configuration files containing secrets should remain ignored by Git.
-
-For example:
+Right-click the tray icon to access:
 
 ```text
-overlay-config.json
-.env
+Desktop Overlay
+├── Settings...
+├── Edit layout
+├──────────────
+├── Refresh services
+├──────────────
+└── Quit
 ```
 
-If an API token is accidentally committed to a public repository, consider it compromised and replace it immediately.
+### Settings
+
+Opens a dedicated Windows settings window.
+
+### Edit layout
+
+Temporarily unlocks the overlay so widgets can be moved.
+
+When layout editing is enabled:
+
+- click-through is disabled;
+- widgets become draggable;
+- a small editing toolbar appears;
+- the settings window is temporarily hidden.
+
+When editing is finished:
+
+- the overlay is locked again;
+- click-through is restored;
+- the settings window can reopen automatically.
 
 ---
 
-# 🧩 Planned widgets
+## ⚙️ Settings Interface
 
-## System
+The project includes a dedicated settings window instead of putting configuration directly inside the overlay.
 
-- [ ] CPU usage
-- [ ] GPU usage
-- [ ] RAM usage
-- [ ] CPU temperature
-- [ ] GPU temperature
-- [ ] Disk usage
-- [ ] Running processes
+The interface is split into sections:
 
-## Network
+```text
+General
+Widgets
+System
+Services
+```
 
-- [ ] Ping
+### General
+
+Contains:
+
+- overlay lock/edit status;
+- edit layout control;
+- configuration path;
+- system tray information.
+
+### Widgets
+
+Allows users to:
+
+- enable/disable every widget;
+- reset widget positions;
+- enable/disable clock options.
+
+### System
+
+Allows users to configure:
+
+- CPU display;
+- GPU display;
+- RAM display;
+- disk display;
+- disk I/O;
+- uptime;
+- refresh interval.
+
+### Services
+
+Allows users to:
+
+- configure Downdetector;
+- configure HTTP monitoring;
+- enable/disable services;
+- add/remove monitored services;
+- change polling interval;
+- manually refresh service status.
+
+---
+
+## 🎯 Project Vision
+
+The long-term goal is to build a native Windows desktop widget platform where users can enable only the components they need.
+
+Planned categories include:
+
+| Category    | Planned widgets                               |
+| ----------- | --------------------------------------------- |
+| 🖥️ System   | CPU, GPU, RAM, disks, temperatures, processes |
+| 🌐 Network  | Ping, bandwidth, packet loss, public IP, VPN  |
+| ☁️ Services | Downdetector, HTTP endpoints, status pages    |
+| 🐳 DevOps   | Docker, VPS, GitHub, CI/CD                    |
+| 🎵 Media    | Spotify, currently playing media              |
+| 🌦️ Daily    | Weather, clock, calendar                      |
+| 📝 Utility  | Notes, timers, shortcuts                      |
+| 🔌 Custom   | REST/JSON widgets, plugins                    |
+
+---
+
+## 🏗️ Architecture
+
+```text
+src/
+├── main.rs
+├── app.rs
+│
+├── core/
+│   ├── config.rs
+│   ├── monitor.rs
+│   ├── system_stats.rs
+│   ├── gpu_stats.rs
+│   ├── disk_stats.rs
+│   ├── tray.rs
+│   ├── widget_registry.rs
+│   ├── windows_overlay.rs
+│   └── mod.rs
+│
+├── providers/
+│   ├── downdetector.rs
+│   ├── http.rs
+│   └── mod.rs
+│
+└── widgets/
+    ├── service_status.rs
+    ├── clock.rs
+    ├── system_monitor.rs
+    └── mod.rs
+```
+
+---
+
+## 🧠 Internal Architecture
+
+The project is separated into multiple layers:
+
+```text
+Windows / Overlay layer
+        │
+        ▼
+Widget Registry
+        │
+        ▼
+Widgets
+        │
+        ▼
+Monitoring Workers
+        │
+        ▼
+External Providers / System APIs
+```
+
+This makes it easier to add new widgets without modifying the core overlay logic.
+
+---
+
+## 🪟 Windows Overlay Behavior
+
+The overlay is created as:
+
+- transparent;
+- borderless;
+- maximized;
+- always on top;
+- hidden from the taskbar;
+- mouse-pass-through when locked.
+
+The application uses a transparent WGPU surface.
+
+The native Win32 helper only changes the `WS_EX_TRANSPARENT` flag when switching between locked and edit mode.
+
+This is intentional.
+
+Changing the complete native window style at runtime can break transparency on Windows, especially after WGPU has already created its rendering surface.
+
+---
+
+## 📡 Service Monitoring
+
+### Generic HTTP provider
+
+The HTTP provider checks an endpoint and compares the returned HTTP status code.
+
+Example:
+
+```json
+{
+  "id": "my-api",
+  "name": "My API",
+  "enabled": true,
+  "provider": "http",
+  "url": "https://example.com/health",
+  "expected_status": 200
+}
+```
+
+---
+
+### Downdetector
+
+The project supports the official Downdetector Enterprise API.
+
+Example endpoint:
+
+```text
+GET https://downdetectorapi.com/v2/companies/{company_id}/status
+Authorization: Bearer <token>
+```
+
+Supported Downdetector states:
+
+| Downdetector | Overlay     |
+| ------------ | ----------- |
+| `success`    | Operational |
+| `warning`    | Degraded    |
+| `danger`     | Outage      |
+
+For security, the token can be provided through an environment variable:
+
+```powershell
+$env:DOWNDETECTOR_TOKEN="YOUR_TOKEN"
+cargo run --release
+```
+
+The token entered through the settings interface remains in memory only.
+
+---
+
+## 📊 System Monitoring
+
+System information is collected using Windows and Rust system APIs.
+
+### CPU / RAM
+
+Collected through `sysinfo`.
+
+### Disk
+
+The application displays:
+
+- total space;
+- used space;
+- per-disk usage;
+- disk read activity;
+- disk write activity.
+
+### GPU
+
+GPU usage is collected using Windows GPU performance information.
+
+GPU collection is performed outside the rendering path so it does not block the overlay UI.
+
+> GPU usage availability can depend on the GPU driver and Windows performance counters.
+
+---
+
+## 🚀 Getting Started
+
+### Requirements
+
+- Windows 10 or Windows 11
+- Rust stable
+- Cargo
+- Visual Studio Build Tools with MSVC if required by your Rust installation
+
+Install Rust:
+
+```text
+https://rustup.rs/
+```
+
+Verify installation:
+
+```powershell
+rustc --version
+cargo --version
+```
+
+---
+
+### Clone
+
+```powershell
+git clone https://github.com/YOUR_USERNAME/desktop-overlay-rust.git
+cd desktop-overlay-rust
+```
+
+---
+
+### Development
+
+```powershell
+cargo run
+```
+
+---
+
+### Optimized build
+
+```powershell
+cargo run --release
+```
+
+Or:
+
+```powershell
+cargo build --release
+```
+
+The executable will be created in:
+
+```text
+target/release/desktop-overlay.exe
+```
+
+---
+
+## 🧪 Development Checks
+
+Before committing:
+
+```powershell
+cargo fmt
+cargo check
+```
+
+Optional:
+
+```powershell
+cargo clippy
+```
+
+---
+
+## 🔐 Security
+
+Never commit private API tokens.
+
+Recommended `.gitignore` entries:
+
+```gitignore
+/target/
+
+overlay-config.json
+
+.env
+.env.*
+
+*.log
+
+.idea/
+.vscode/
+
+Thumbs.db
+Desktop.ini
+```
+
+Keep `Cargo.lock` committed for this application.
+
+---
+
+## 🛣️ Roadmap
+
+### v0.1 — Overlay foundation
+
+- [x] Transparent overlay
+- [x] Click-through mode
+- [x] Always-on-top
+- [x] Service Monitor
+- [x] HTTP monitoring
+- [x] Downdetector provider
+- [x] Configuration persistence
+
+### v0.2 — Widget system
+
+- [x] Widget registry
+- [x] Enable/disable widgets
+- [x] Persistent widget positions
+- [x] Clock widget
+- [x] CPU/RAM monitoring
+- [x] Per-widget options
+
+### v0.3 — Desktop application UX
+
+- [x] System tray icon
+- [x] Tray context menu
+- [x] Dedicated settings window
+- [x] Professional settings navigation
+- [x] Layout editing mode
+- [x] GPU usage
+- [x] Disk usage
+- [x] Disk I/O monitoring
+- [x] Individual system metric toggles
+
+### v0.4 — Network monitoring
+
+- [ ] Ping widget
+- [ ] Packet loss
 - [ ] Download speed
 - [ ] Upload speed
-- [ ] Packet loss
+- [ ] Network adapter selection
 - [ ] Public IP
 - [ ] VPN status
 
-## Services
+### v0.5 — Hardware monitoring
 
-- [x] Service monitoring engine
-- [x] Downdetector provider
-- [x] HTTP provider
-- [ ] Discord status
-- [ ] Steam status
-- [ ] GitHub status
-- [ ] Cloudflare status
-- [ ] Microsoft services
-- [ ] Twitch status
+- [ ] CPU temperature
+- [ ] GPU temperature
+- [ ] Fan speeds
+- [ ] VRAM usage
+- [ ] Per-core CPU usage
+- [ ] Disk temperature
 
-## Desktop
-
-- [ ] Clock
-- [ ] Calendar
-- [ ] Weather
-- [ ] Notes
-- [ ] Application shortcuts
-- [ ] Timer
-- [ ] Stopwatch
-
-## Media
-
-- [ ] Current media
-- [ ] Spotify integration
-- [ ] Playback controls
-- [ ] Volume controls
-
-## Developer tools
-
-- [ ] GitHub notifications
-- [ ] Git repository status
-- [ ] Docker containers
-- [ ] Server monitoring
-- [ ] HTTP endpoint monitoring
-- [ ] Custom API widgets
-
----
-
-# 🗺️ Roadmap
-
-## v0.1 — Overlay foundation
-
-- [x] Rust application
-- [x] egui / eframe rendering
-- [x] Transparent Windows overlay
-- [x] Click-through
-- [x] Global F8 shortcut
-- [x] Edit mode
-- [x] Service monitoring widget
-- [x] Background monitoring
-- [x] Configuration persistence
-
-## v0.2 — Widget engine
-
-- [ ] Generic widget manager
-- [ ] Drag and drop
-- [ ] Resize widgets
-- [ ] Widget enable/disable menu
-- [ ] Widget configuration interface
-- [ ] Snap-to-grid
-- [ ] Multiple layouts
-- [ ] Import/export layouts
-
-## v0.3 — System monitoring
-
-- [ ] CPU widget
-- [ ] GPU widget
-- [ ] RAM widget
-- [ ] Temperature sensors
-- [ ] Network statistics
-- [ ] Performance graphs
-
-## v0.4 — Customization
+### Future
 
 - [ ] Themes
-- [ ] Accent colors
-- [ ] Widget opacity
-- [ ] Widget backgrounds
-- [ ] Font configuration
-- [ ] Animations
 - [ ] Multiple monitors
-
-## Future
-
-- [ ] Widget SDK
-- [ ] Plugin system
+- [ ] Snap-to-grid
+- [ ] Widget resizing
+- [ ] Multiple widget instances
+- [ ] Custom REST/JSON widgets
+- [ ] Plugin SDK
 - [ ] Community widgets
 - [ ] Automatic updates
-- [ ] Widget marketplace
-- [ ] Layout sharing
-- [ ] Windows startup option
+- [ ] Start with Windows
+- [ ] Import/export layouts
+- [ ] Native notifications
 
 ---
 
-# 🤝 Contributing
+## 🤝 Contributing
 
 Contributions are welcome.
 
-You can contribute by:
+Useful contribution areas include:
 
-- Reporting bugs
-- Suggesting widgets
-- Improving documentation
-- Improving Windows compatibility
-- Creating monitoring providers
-- Creating new widgets
-- Optimizing performance
-- Improving the UI
+- new widgets;
+- monitoring providers;
+- Windows overlay fixes;
+- performance improvements;
+- UI/UX improvements;
+- documentation;
+- hardware monitoring;
+- network monitoring.
 
-For large changes, creating an issue describing the proposed feature before implementing it is recommended.
+Recommended workflow:
+
+```powershell
+git checkout -b feature/my-widget
+
+cargo fmt
+cargo check
+
+git add .
+git commit -m "feat: add my widget"
+git push -u origin feature/my-widget
+```
+
+Then open a pull request.
 
 ---
 
-# 🐛 Bug reports
+## 🐛 Bug Reports
 
 When reporting a bug, please include:
 
 ```text
 Windows version
+GPU model
+GPU driver version
 Rust version
 Application version
 Steps to reproduce
 Expected behavior
 Actual behavior
 Console output
-Screenshots if relevant
+Screenshot
 ```
 
-This makes debugging considerably easier.
+For overlay/transparency problems, GPU and driver information are especially useful.
 
 ---
 
-# 💡 Widget ideas
-
-Have an idea for a useful desktop widget?
-
-Open an issue and describe:
-
-```text
-What the widget displays
-Where the data comes from
-How often it should update
-What configuration options it needs
-```
-
-Community widget ideas are welcome.
-
----
-
-# ⚙️ Technology
-
-The project currently uses:
-
-```text
-Rust
-egui
-eframe
-WGPU
-Win32 APIs
-Serde
-Reqwest
-```
-
-Rust provides native performance and memory safety while egui makes it possible to rapidly build dynamic desktop interfaces.
-
----
-
-# 🎯 Project goals
-
-Desktop Overlay aims to be:
-
-**Fast**
-
-Minimal CPU and memory usage.
-
-**Modular**
-
-Widgets should remain independent from the overlay engine.
-
-**Customizable**
-
-Users should eventually be able to build their own desktop layout.
-
-**Native**
-
-No browser runtime or Electron dependency.
-
-**Extensible**
-
-New widgets and monitoring providers should be easy to implement.
-
-**Open**
-
-The long-term goal is to allow community-created widgets and integrations.
-
----
-
-# ⭐ Support the project
-
-If you find the project useful, consider starring the repository.
-
-Stars help other developers discover the project and give useful feedback on which features should be prioritized.
-
-Bug reports, feature requests and pull requests are also greatly appreciated.
-
----
-
-# 📄 License
-
-A license has not yet been finalized.
-
-For an open-source project, the MIT or Apache-2.0 licenses are good candidates.
-
----
-
-## GitHub Topics
+## 🔎 GitHub Topics
 
 Recommended repository topics:
 
@@ -619,15 +663,27 @@ desktop-widgets
 egui
 eframe
 wgpu
-widgets
+win32
 system-monitor
 monitoring
-downdetector
-windows-11
+gpu-monitor
+cpu-monitor
+desktop-app
 rust-gui
-win32
 ```
 
 ---
 
-Built with 🦀 Rust.
+## ⭐ Support
+
+If you find the project useful, starring the repository helps other developers discover it.
+
+Bug reports, feature requests and pull requests are welcome.
+
+---
+
+<div align="center">
+
+Built with **Rust**, **egui/eframe**, **WGPU** and the **Win32 API**.
+
+</div>

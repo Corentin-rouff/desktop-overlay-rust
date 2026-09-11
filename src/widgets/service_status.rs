@@ -3,7 +3,10 @@ use crate::core::{
     monitor::{HealthState, ServiceSnapshot},
 };
 use eframe::egui;
-use std::collections::HashMap;
+use std::{
+    collections::HashMap,
+    time::{SystemTime, UNIX_EPOCH},
+};
 
 pub fn show(
     ctx: &egui::Context,
@@ -11,6 +14,8 @@ pub fn show(
     edit_mode: bool,
     services: &[ServiceConfig],
     snapshots: &HashMap<String, ServiceSnapshot>,
+    show_details: bool,
+    show_last_check: bool,
 ) -> egui::Pos2 {
     let area = egui::Area::new(egui::Id::new("service_status_widget"))
         .current_pos(position)
@@ -18,7 +23,7 @@ pub fn show(
         .order(egui::Order::Foreground)
         .show(ctx, |ui| {
             egui::Frame::new()
-                .fill(egui::Color32::from_black_alpha(218))
+                .fill(egui::Color32::from_rgba_premultiplied(20, 20, 24, 235))
                 .stroke(egui::Stroke::new(1.0, egui::Color32::from_gray(64)))
                 .corner_radius(14)
                 .inner_margin(14.0)
@@ -29,7 +34,7 @@ pub fn show(
                         ui.label(egui::RichText::new("SERVICE MONITOR").strong().size(16.0));
                         if edit_mode {
                             ui.label(
-                                egui::RichText::new("  • déplacer")
+                                egui::RichText::new("• déplacer")
                                     .small()
                                     .color(egui::Color32::LIGHT_GRAY),
                             );
@@ -47,7 +52,22 @@ pub fn show(
                         let detail = snapshot
                             .map(|s| s.detail.as_str())
                             .unwrap_or("En attente de la première vérification…");
-                        service_row(ui, &service.name, state, detail);
+                        let checked_ago = snapshot.map(|s| {
+                            SystemTime::now()
+                                .duration_since(UNIX_EPOCH)
+                                .unwrap_or_default()
+                                .as_secs()
+                                .saturating_sub(s.checked_at_unix)
+                        });
+                        service_row(
+                            ui,
+                            &service.name,
+                            state,
+                            detail,
+                            checked_ago,
+                            show_details,
+                            show_last_check,
+                        );
                     }
 
                     if shown == 0 {
@@ -72,7 +92,15 @@ pub fn show(
     area.response.rect.min
 }
 
-fn service_row(ui: &mut egui::Ui, name: &str, state: HealthState, detail: &str) {
+fn service_row(
+    ui: &mut egui::Ui,
+    name: &str,
+    state: HealthState,
+    detail: &str,
+    checked_ago: Option<u64>,
+    show_details: bool,
+    show_last_check: bool,
+) {
     let (dot, label, color) = match state {
         HealthState::Operational => ("●", "Opérationnel", egui::Color32::from_rgb(65, 210, 125)),
         HealthState::Degraded => ("●", "Perturbations", egui::Color32::from_rgb(245, 185, 60)),
@@ -87,11 +115,22 @@ fn service_row(ui: &mut egui::Ui, name: &str, state: HealthState, detail: &str) 
                 ui.label(egui::RichText::new(name).strong());
                 ui.label(egui::RichText::new(label).small().color(color));
             });
-            ui.label(
-                egui::RichText::new(detail)
-                    .small()
-                    .color(egui::Color32::from_gray(175)),
-            );
+            if show_details {
+                ui.label(
+                    egui::RichText::new(detail)
+                        .small()
+                        .color(egui::Color32::from_gray(175)),
+                );
+            }
+            if show_last_check {
+                if let Some(seconds) = checked_ago {
+                    ui.label(
+                        egui::RichText::new(format!("Vérifié il y a {seconds} s"))
+                            .small()
+                            .color(egui::Color32::from_gray(115)),
+                    );
+                }
+            }
         });
     });
     ui.add_space(8.0);

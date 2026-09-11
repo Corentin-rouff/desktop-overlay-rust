@@ -1,6 +1,6 @@
 [package]
 name = "desktop-overlay"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 
 [dependencies]
@@ -11,5 +11,15 @@ serde_json = "1"
 reqwest = { version = "0.12", default-features = false, features = ["blocking", "json", "rustls-tls"] }
 anyhow = "1"
 
+chrono = "0.4.45"
+sysinfo = { version = "0.39.6", default-features = false, features = ["system", "disk"] }
+
 [target.'cfg(windows)'.dependencies]
-windows-sys = { version = "0.61", features = ["Win32_UI_Input_KeyboardAndMouse"] }
+tray-icon = "0.24.2"
+wmi = "0.18.4"
+windows-sys = { version = "0.61", features = [
+    "Win32_Foundation",
+    "Win32_Graphics_Gdi",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_WindowsAndMessaging"
+] }
