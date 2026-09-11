@@ -450,7 +450,7 @@ cargo --version
 ### Clone
 
 ```powershell
-git clone https://github.com/YOUR_USERNAME/desktop-overlay-rust.git
+git clone https://github.com/Corentin-rouff/desktop-overlay-rust.git
 cd desktop-overlay-rust
 ```
 
