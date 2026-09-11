@@ -1,0 +1,22 @@
+# Rust
+/target/
+
+# Local overlay configuration / secrets
+overlay-config.json
+.env
+.env.*
+
+# Logs
+*.log
+
+# IDE
+.idea/
+.vscode/
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.bak

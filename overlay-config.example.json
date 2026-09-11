@@ -1,0 +1,24 @@
+{
+  "polling_seconds": 30,
+  "service_widget_position": {
+    "x": 30.0,
+    "y": 30.0
+  },
+  "services": [
+    {
+      "id": "discord-dd",
+      "name": "Discord",
+      "enabled": true,
+      "provider": "downdetector",
+      "company_id": 12345
+    },
+    {
+      "id": "my-api",
+      "name": "Mon API",
+      "enabled": true,
+      "provider": "http",
+      "url": "https://example.com/health",
+      "expected_status": 200
+    }
+  ]
+}
